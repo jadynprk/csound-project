@@ -174,6 +174,23 @@ export default function HandSyncSequencer() {
         {playing ? "■" : "▶"}
       </button>
 
+      {/* blog link */}
+      <a href="blog.html"
+        style={{
+          position: "absolute",
+          bottom: 16,
+          right: 16,
+          fontSize: 10,
+          letterSpacing: 2,
+          textTransform: "uppercase",
+          color: "rgba(255,255,255,0.35)",
+          textDecoration: "none",
+          zIndex: 10,
+        }}
+      >
+        blog →
+      </a>
+
       {/* gesture debug label */}
       {gesture && (
         <div style={{
