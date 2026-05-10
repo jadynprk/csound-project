@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/csound-project/static/css/main.453541e3.css",
-    "main.js": "/csound-project/static/js/main.83d9366f.js",
+    "main.js": "/csound-project/static/js/main.4cf6a45e.js",
     "index.html": "/csound-project/index.html",
     "main.453541e3.css.map": "/csound-project/static/css/main.453541e3.css.map",
-    "main.83d9366f.js.map": "/csound-project/static/js/main.83d9366f.js.map"
+    "main.4cf6a45e.js.map": "/csound-project/static/js/main.4cf6a45e.js.map"
   },
   "entrypoints": [
     "static/css/main.453541e3.css",
-    "static/js/main.83d9366f.js"
+    "static/js/main.4cf6a45e.js"
   ]
 }
