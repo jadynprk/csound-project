@@ -3,10 +3,10 @@ import * as Tone from "tone";
 import { ROWS } from "../constants";
 
 const SAMPLE_PATHS = {
-  kick:     "/samples/kick.wav",
-  snare:    "/samples/snare.wav",
-  clap:     "/samples/clap.wav",
-  "hi-hat": "/samples/hihat.wav",
+  kick:     "${process.env.PUBLIC_URL}/samples/kick.wav",
+  snare:    "${process.env.PUBLIC_URL}/samples/snare.wav",
+  clap:     "${process.env.PUBLIC_URL}/samples/clap.wav",
+  "hi-hat": "${process.env.PUBLIC_URL}/samples/hihat.wav",
 };
 
 export function useAudio() {
