@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hands as Controllers — Blog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0c0c0c;
+      --fg: rgba(255,255,255,0.85);
+      --dim: rgba(255,255,255,0.35);
+      --accent: rgba(255,255,255,0.7);
+      --rule: rgba(255,255,255,0.08);
+      --mono: 'Space Mono', monospace;
+      --serif: 'DM Serif Display', serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--fg);
+      font-family: var(--mono);
+      font-size: 14px;
+      line-height: 1.8;
+      min-height: 100vh;
+    }
+
+    /* grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 100;
+      opacity: 0.4;
+    }
+
+    /* nav */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      padding: 20px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 0.5px solid var(--rule);
+      background: rgba(12,12,12,0.85);
+      backdrop-filter: blur(12px);
+      z-index: 10;
+    }
+
+    nav a {
+      color: var(--dim);
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: var(--fg); }
+
+    .nav-back {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-back::before {
+      content: '←';
+      font-size: 14px;
+    }
+
+    .nav-label {
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: var(--dim);
+      text-transform: uppercase;
+    }
+
+    /* main layout */
+    main {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 140px 40px 100px;
+    }
+
+    /* header */
+    .post-header {
+      margin-bottom: 64px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards;
+    }
+
+    .post-label {
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(32px, 5vw, 52px);
+      line-height: 1.15;
+      font-weight: 400;
+      color: rgba(255,255,255,0.95);
+      margin-bottom: 28px;
+    }
+
+    h1 em {
+      font-style: italic;
+      color: var(--dim);
+    }
+
+    .post-meta {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: var(--dim);
+      text-transform: uppercase;
+      padding-top: 24px;
+      border-top: 0.5px solid var(--rule);
+    }
+
+    /* sections */
+    section {
+      margin-bottom: 56px;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards;
+    }
+
+    section:nth-child(1) { animation-delay: 0.1s; }
+    section:nth-child(2) { animation-delay: 0.2s; }
+    section:nth-child(3) { animation-delay: 0.3s; }
+    section:nth-child(4) { animation-delay: 0.4s; }
+    section:nth-child(5) { animation-delay: 0.5s; }
+    section:nth-child(6) { animation-delay: 0.6s; }
+    section:nth-child(7) { animation-delay: 0.7s; }
+
+    h2 {
+      font-family: var(--mono);
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--dim);
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 0.5px solid var(--rule);
+    }
+
+    p {
+      color: var(--fg);
+      margin-bottom: 16px;
+    }
+
+    p:last-child { margin-bottom: 0; }
+
+    /* code blocks */
+    pre {
+      background: rgba(255,255,255,0.03);
+      border: 0.5px solid var(--rule);
+      border-left: 2px solid rgba(255,255,255,0.15);
+      padding: 20px 24px;
+      overflow-x: auto;
+      margin: 24px 0;
+      border-radius: 2px;
+    }
+
+    code {
+      font-family: var(--mono);
+      font-size: 12px;
+      line-height: 1.7;
+      color: rgba(255,255,255,0.65);
+    }
+
+    p code {
+      background: rgba(255,255,255,0.06);
+      padding: 2px 6px;
+      border-radius: 2px;
+      font-size: 12px;
+      color: rgba(255,255,255,0.75);
+    }
+
+    /* gesture list */
+    .gesture-list {
+      list-style: none;
+      margin: 20px 0;
+    }
+
+    .gesture-list li {
+      padding: 14px 0;
+      border-bottom: 0.5px solid var(--rule);
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 16px;
+      align-items: baseline;
+    }
+
+    .gesture-list li:first-child {
+      border-top: 0.5px solid var(--rule);
+    }
+
+    .gesture-key {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+
+    /* pullquote */
+    blockquote {
+      margin: 32px 0;
+      padding: 24px 32px;
+      border-left: 2px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.02);
+    }
+
+    blockquote p {
+      font-family: var(--serif);
+      font-size: 20px;
+      line-height: 1.5;
+      font-style: italic;
+      color: rgba(255,255,255,0.7);
+      margin: 0;
+    }
+
+    /* footer */
+    footer {
+      margin-top: 80px;
+      padding-top: 32px;
+      border-top: 0.5px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    footer span {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--dim);
+    }
+
+    footer a {
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--dim);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    footer a:hover { color: var(--fg); }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-back">back to app</a>
+    <span class="nav-label">project blog</span>
+  </nav>
+
+  <main>
+
+    <div class="post-header">
+      <p class="post-label">implementation write-up</p>
+      <h1>Making Music<br/><em>with Your Hands</em></h1>
+      <p class="post-meta">computational sound &nbsp;·&nbsp; spring 2025 &nbsp;·&nbsp; Jadyn &amp; Madeline</p>
+    </div>
+
+    <section>
+      <p>A real-time tool to create music via drum beats and synths using hand gestures on a web browser. Built with React + JavaScript.</p>
+    </section>
+
+    <section>
+      <h2>Audio</h2>
+      <p>The full audio pipeline is built on Tone.js, a WebAudio API wrapper. Sound generation happens through two paths.</p>
+      <p>Drum samples are loaded into <code>Tone.Players</code>, which are containers that hold sound via a key/file path system — <code>players.player("kick")</code> retrieves the player and allows the audio to play immediately. Synth sounds come from <code>Tone.PolySynth</code>, a polyphonic synthesizer that generates audio mathematically in real time using oscillators and an amplitude envelope.</p>
+      <p>All sounds pass through a <code>Tone.Limiter</code> that caps output at a certain decibel level to prevent clipping, which then routes everything to <code>Tone.Destination</code>.</p>
+      <p>Timing is handled by <code>Tone.Transport</code>, which keeps a position that advances forward as audio runs, measured in bars, beats, and sixteenth notes. <code>Tone.Transport.progress</code> tracks position as a fraction of the entire measure. <code>Tone.Sequence</code> then schedules events based on the Web Audio hardware clock, allowing audio to be pre-scheduled to play at the right moment on the clock regardless of what JavaScript is actually doing.</p>
+    </section>
+
+    <section>
+      <h2>UI</h2>
+      <p>On top of a live camera feed, there exists a grid overlay where rows represent the different types of sounds and columns represent 16th notes. The grid is made up of two parts:</p>
+      <p><strong>Grid.jsx</strong> — an invisible grid that divides the screen into row × column cells, with pixel coordinates handled by the browser. Each cell is toggled on when it receives a note. There are two separate grids: the drum grid has 4 rows (kick, snare, clap, hi-hat) and the synth grid has 7 rows (C D E F G A B).</p>
+      <p><strong>ThreeCanvas.jsx</strong> — one large <code>&lt;canvas&gt;</code> element layered over the video that handles all visual components. When a dot is placed on a cell the area becomes 3D, and when the cell is played a burst animation occurs. To match coordinates between these two layers, ThreeCanvas reads the pixel position of each Grid cell and stores it in a cache. When cells toggle, ThreeCanvas draws visual elements at the exact cached coordinates.</p>
+      <p>When playing, a single vertical line sweeps through the grid horizontally to indicate which notes are being played. Its position is governed by <code>Tone.Transport.progress</code> — if 1 measure is 16 notes and the 8th note is playing, the bar sits at the halfway point. This allows the browser to be continuously resized without the play bar and audio drifting.</p>
+    </section>
+
+    <section>
+      <h2>Pipeline</h2>
+      <p><strong>HandSyncSequencer.jsx</strong> functions as the pipeline by dictating all states — which cells are active, current mode, cursor position, and the active gesture. It routes gestures to their corresponding actions: peace sign places a note, both palms pause/play, pinky up switches between drum and synth mode.</p>
+      <p><strong>useSequencer.js</strong> contains 4 important lines that define what a single measure looks like:</p>
+      <pre><code>Tone.getTransport().bpm.value = BPM;  // sets the tempo
+Tone.getTransport().loop      = true; // continuous loop
+Tone.getTransport().loopStart = 0;    // starts at the beginning
+Tone.getTransport().loopEnd   = "1m"; // ends after 1 measure</code></pre>
+      <p>In Tone's notation, <code>"1m"</code> means one bar in 4/4 time, which at any BPM is always exactly 16 sixteenth notes. This is what allows <code>Transport.progress</code> to be tracked as a fraction of the measure. Using <code>Tone.Sequence</code>, on every 16th note it checks both grids and fires the corresponding audio at the exact time. <code>Tone.Draw</code> syncs the visual burst animations to the same moment.</p>
+    </section>
+
+    <section>
+      <h2>MediaPipe</h2>
+      <p>MediaPipe is Google's open source ML software library, especially good for computer vision. For hand tracking, we used the HandLandmarker model, which detects 21 landmarks per hand in real time — allowing very detailed hand tracking. It runs entirely client-side via WebAssembly, meaning no server, less latency, and no privacy concerns about streaming webcam data.</p>
+      <p>The MediaPipe Tasks Vision API's <code>VIDEO</code> running mode handles continuous streams where timestamps drive the inference loop, giving synchronous per-frame results that integrate cleanly with a <code>requestAnimationFrame</code> loop.</p>
+    </section>
+
+    <section>
+      <h2>Architecture</h2>
+      <p>The hand tracking layer is implemented as a React hook (<code>useHandTracking</code>), which accepts a video ref and a result callback. On mount, it loads the HandLandmarker model asynchronously from Google's CDN, then starts a <code>requestAnimationFrame</code> loop that calls <code>detectForVideo</code> on each frame, passing the current video element and a <code>performance.now()</code> timestamp. Results come back synchronously and are immediately passed to the callback.</p>
+    </section>
+
+    <section>
+      <h2>Gesture Design</h2>
+      <p>We split the two hands into distinct roles. The right hand acts as the cursor — the normalized x/y coordinates of landmark #8 (the index fingertip) map directly onto the sequencer grid. Because MediaPipe returns landmark positions as fractions of the frame dimensions (0–1) and the grid occupies the full viewport, no additional coordinate transformation is needed.</p>
+      <p>The left hand handles gestures. Gestures are defined by which fingers are extended, determined by comparing the y-coordinate of the fingertip to that of the proximal interphalangeal (PIP) joint. If the tip is above the PIP, the finger is extended.</p>
+
+      <ul class="gesture-list">
+        <li>
+          <span class="gesture-key">peace sign</span>
+          <span>Places and removes notes on the grid.</span>
+        </li>
+        <li>
+          <span class="gesture-key">pinky up</span>
+          <span>Switches modes between drums and synth.</span>
+        </li>
+        <li>
+          <span class="gesture-key">both hands up</span>
+          <span>Starts and stops the player. Takes priority over single-hand gestures.</span>
+        </li>
+      </ul>
+
+      <p>Placing and removing notes works by mapping the right-hand fingertip to a grid cell and toggling it on a left-hand peace sign. The cursor coordinates are maintained in both React state (for rendering the visual crosshair) and a ref (for reading in the gesture handler without stale closure issues). A cooldown of 600ms prevents a single held gesture from toggling too quickly.</p>
+    </section>
+
+    <section>
+      <h2>Integration with the Audio Layer</h2>
+      <p>The hand tracking hook is intentionally decoupled from audio, which means the gesture dictionary can be extended without touching the audio pipeline. It produces two values per frame: a fingertip position and a gesture string. <code>HandSyncSequencer</code> maps these values to actions — cursor position updates React state, and gesture strings are compared in <code>useEffect</code> and dispatched to the appropriate handler.</p>
+    </section>
+
+    <footer>
+      <span>Jadyn &amp; Madeline &nbsp;·&nbsp; spring 2025</span>
+      <a href="index.html">← back to app</a>
+    </footer>
+
+  </main>
+
+</body>
+</html>
